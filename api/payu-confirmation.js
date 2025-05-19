@@ -78,7 +78,7 @@ const handler = async (req, res) => {
     const transaction_id = getField(data, 'transaction_id');
     const state_pol = getField(data, 'state_pol');
     const response_message_pol = getField(data, 'response_message_pol');
-    const rawTxValue = getField(data, 'TX_VALUE');
+    const rawTxValue = getField(data, 'TX_VALUE') || getField(data, 'value');
     const currency = getField(data, 'currency');
     const sign = getField(data, 'sign');
     const merchant_id = getField(data, 'merchant_id');
