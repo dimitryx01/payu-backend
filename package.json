@@ -1,19 +1,16 @@
 {
-    "name": "payu-backend",
-    "version": "1.0.0",
-    "description": "Backend for PayU integration",
-    "main": "index.js",
-    "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "dependencies": {
-     
-    },
-    "devDependencies": {
-      "@types/node": "^18.0.0",
-      "typescript": "^4.7.4"
-    }
+  "name": "payu-backend",
+  "version": "1.0.0",
+  "description": "Backend for PayU integration",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node api/payu-checkout.js",
+    "start": "node api/payu-checkout.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5"
   }
+}
