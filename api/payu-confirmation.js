@@ -2,14 +2,12 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const { IncomingForm } = require('formidable');
 
-// Configuración para desactivar el bodyParser de Next.js
 export const config = {
   api: {
     bodyParser: false,
   },
 };
 
-// Configuración del transportador de correo con Zoho
 const transporter = nodemailer.createTransport({
   host: 'smtp.zoho.com',
   port: 465,
@@ -29,12 +27,10 @@ function allowCors(handler) {
       'Access-Control-Allow-Headers',
       'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
     );
-
     if (req.method === 'OPTIONS') {
       res.status(200).end();
       return;
     }
-
     return handler(req, res);
   };
 }
@@ -52,6 +48,10 @@ function formatCurrency(value) {
     style: 'currency',
     currency: 'COP',
   }).format(value);
+}
+
+function getField(data, key) {
+  return Array.isArray(data[key]) ? data[key][0] : data[key];
 }
 
 const handler = async (req, res) => {
@@ -73,26 +73,28 @@ const handler = async (req, res) => {
 
     console.log('Parsed PayU Body:', data);
 
-    const {
-      reference_sale,
-      transaction_id,
-      state_pol,
-      response_message_pol,
-      TX_VALUE,
-      currency,
-      sign,
-      merchant_id,
-      reference_pol,
-      payment_method_type,
-      payment_method_name,
-      email_buyer,
-      payment_date,
-      payer_name,
-    } = data;
+    // Obtener campos con limpieza de arrays
+    const reference_sale = getField(data, 'reference_sale');
+    const transaction_id = getField(data, 'transaction_id');
+    const state_pol = getField(data, 'state_pol');
+    const response_message_pol = getField(data, 'response_message_pol');
+    const rawTxValue = getField(data, 'TX_VALUE');
+    const currency = getField(data, 'currency');
+    const sign = getField(data, 'sign');
+    const merchant_id = getField(data, 'merchant_id');
+    const reference_pol = getField(data, 'reference_pol');
+    const payment_method_type = getField(data, 'payment_method_type');
+    const payment_method_name = getField(data, 'payment_method_name');
+    const email_buyer = getField(data, 'email_buyer');
+    const payment_date = getField(data, 'payment_date');
+    const payer_name = getField(data, 'payer_name');
 
+    // Redondeo a un decimal como exige PayU
+    const txValueFormatted = parseFloat(rawTxValue).toFixed(1);
+
+    // Construcción de firma
     const API_KEY = process.env.PAYU_API_KEY;
-
-    const signatureString = `${API_KEY}~${merchant_id}~${reference_sale}~${TX_VALUE}~${currency}~${state_pol}`;
+    const signatureString = `${API_KEY}~${merchant_id}~${reference_sale}~${txValueFormatted}~${currency}~${state_pol}`;
     const expectedSignature = crypto.createHash('md5').update(signatureString).digest('hex');
 
     console.log('Firma esperada (cadena):', signatureString);
@@ -141,7 +143,7 @@ const handler = async (req, res) => {
             <ul style="list-style: none; padding: 0;">
               <li><strong>Referencia:</strong> ${reference_sale}</li>
               <li><strong>ID Transacción:</strong> ${transaction_id}</li>
-              <li><strong>Valor:</strong> ${formatCurrency(TX_VALUE)}</li>
+              <li><strong>Valor:</strong> ${formatCurrency(rawTxValue)}</li>
               <li><strong>Moneda:</strong> ${currency}</li>
               <li><strong>Método de Pago:</strong> ${payment_method_name || payment_method_type}</li>
               <li><strong>Fecha:</strong> ${formatDate(new Date(payment_date || Date.now()))}</li>
@@ -174,7 +176,7 @@ const handler = async (req, res) => {
       transaction_id,
       state_pol,
       statusMessage,
-      value,
+      txValueFormatted,
       currency,
       email_buyer,
     });
