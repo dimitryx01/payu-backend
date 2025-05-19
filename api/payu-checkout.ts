@@ -27,6 +27,7 @@ interface PayUResponse {
   };
 }
 
+
 // Configurar CORS para permitir peticiones desde tu dominio
 const allowCors = (fn: any) => async (req: NextApiRequest, res: NextApiResponse) => {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
