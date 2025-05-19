@@ -67,7 +67,7 @@ const handler = async (req, res) => {
         <input name="test"          type="hidden"  value="${TEST_MODE ? 1 : 0}" >
         <input name="buyerEmail"    type="hidden"  value="${email}" >
         <input name="responseUrl"    type="hidden"  value="${BASE_URL}/response" >
-        <input name="confirmationUrl"    type="hidden"  value="${BASE_URL}/api/payu-confirmation" >
+        <input name="confirmationUrl" type="hidden" value="${process.env.PAYU_CONFIRMATION_URL}" >
         <input name="buyerFullName" type="hidden"  value="${nombre}" >
       </form>
       <script>
