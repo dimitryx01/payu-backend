@@ -58,31 +58,42 @@ const handler = async (req, res) => {
 
   try {
     const {
-      reference_sale,
-      transaction_id,
-      state_pol,
-      response_message_pol,
-      value,
-      currency,
-      sign,
-      merchant_id,
-      reference_pol,
-      payment_method_type,
-      payment_method_name, // Método de pago específico
-      email_buyer,
-      payment_date, // Fecha del pago
-      payer_name, // Nombre del pagador si está disponible
-    } = req.body;
-
-    // Verificar la firma de PayU
-    const API_KEY = process.env.PAYU_API_KEY;
-    const signatureString = `${API_KEY}~${merchant_id}~${reference_sale}~${value}~${currency}~${state_pol}`;
-    const expectedSignature = crypto.createHash('md5').update(signatureString).digest('hex');
-
-    if (sign !== expectedSignature) {
-      console.error('Invalid PayU signature');
-      return res.status(400).send('Invalid signature');
-    }
+        reference_sale,
+        transaction_id,
+        state_pol,
+        response_message_pol,
+        value,
+        currency,
+        sign,
+        merchant_id,
+        reference_pol,
+        payment_method_type,
+        payment_method_name,
+        email_buyer,
+        payment_date,
+        payer_name,
+      } = req.body;
+      
+      // Recomendación importante:
+      // Asegúrate de que "value" llegue como string tipo "100.00" exactamente con 2 decimales
+      // Si no, podrías tener problemas de coincidencia con la firma.
+      
+      const API_KEY = process.env.PAYU_API_KEY;
+      
+      // Construir la firma según documentación oficial
+      const signatureString = `${API_KEY}~${merchant_id}~${reference_sale}~${value}~${currency}~${state_pol}`;
+      const expectedSignature = crypto.createHash('md5').update(signatureString).digest('hex');
+      
+      // Log para depuración
+      console.log('Firma esperada (cadena):', signatureString);
+      console.log('Firma esperada (MD5):', expectedSignature);
+      console.log('Firma recibida:', sign);
+      
+      // Verificación de la firma
+      if (sign !== expectedSignature) {
+        console.error('Firma inválida de PayU');
+        return res.status(400).send('Invalid signature');
+      }
 
     // Interpretar el estado de la transacción
     let statusMessage;
