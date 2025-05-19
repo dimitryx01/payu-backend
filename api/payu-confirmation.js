@@ -78,7 +78,7 @@ const handler = async (req, res) => {
       transaction_id,
       state_pol,
       response_message_pol,
-      value,
+      TX_VALUE,
       currency,
       sign,
       merchant_id,
@@ -92,7 +92,7 @@ const handler = async (req, res) => {
 
     const API_KEY = process.env.PAYU_API_KEY;
 
-    const signatureString = `${API_KEY}~${merchant_id}~${reference_sale}~${value}~${currency}~${state_pol}`;
+    const signatureString = `${API_KEY}~${merchant_id}~${reference_sale}~${TX_VALUE}~${currency}~${state_pol}`;
     const expectedSignature = crypto.createHash('md5').update(signatureString).digest('hex');
 
     console.log('Firma esperada (cadena):', signatureString);
@@ -141,7 +141,7 @@ const handler = async (req, res) => {
             <ul style="list-style: none; padding: 0;">
               <li><strong>Referencia:</strong> ${reference_sale}</li>
               <li><strong>ID Transacción:</strong> ${transaction_id}</li>
-              <li><strong>Valor:</strong> ${formatCurrency(value)}</li>
+              <li><strong>Valor:</strong> ${formatCurrency(TX_VALUE)}</li>
               <li><strong>Moneda:</strong> ${currency}</li>
               <li><strong>Método de Pago:</strong> ${payment_method_name || payment_method_type}</li>
               <li><strong>Fecha:</strong> ${formatDate(new Date(payment_date || Date.now()))}</li>
