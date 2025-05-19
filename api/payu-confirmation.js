@@ -49,6 +49,8 @@ function formatCurrency(value) {
 }
 
 const handler = async (req, res) => {
+    console.log('PayU Confirmation Endpoint called!'); // Agrega este log
+  console.log('Request body:', req.body); // Agrega este log
   if (req.method !== 'POST') {
     res.status(405).json({ message: 'Method Not Allowed' });
     return;
