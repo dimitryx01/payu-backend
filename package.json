@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+    "formidable": "^3.5.4",
     "nodemailer": "^7.0.3"
   }
 }
