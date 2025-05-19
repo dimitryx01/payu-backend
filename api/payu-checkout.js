@@ -54,7 +54,7 @@ const handler = async (req, res) => {
     const signature = crypto.createHash('md5').update(signatureString).digest('hex');
 
     const form = `
-      <form id="payuForm" method="post" action="https://sandbox.checkout.payulatam.com/ppp-web-gateway/">
+     <form id="payuForm" method="post" action="https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu/">
         <input name="merchantId"    type="hidden"  value="${MERCHANT_ID}"   >
         <input name="accountId"     type="hidden"  value="${ACCOUNT_ID}" >
         <input name="description"   type="hidden"  value="${description}"  >
