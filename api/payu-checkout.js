@@ -52,7 +52,8 @@ const handler = async (req, res) => {
 
     const signatureString = `${API_KEY}~${MERCHANT_ID}~${referenceCode}~${amount}~COP`;
     const signature = crypto.createHash('md5').update(signatureString).digest('hex');
-
+    console.log('Firma esperada (cadena):', signatureString);
+    console.log('Firma esperada (MD5):', signature );
     const form = `
      <form id="payuForm" method="post" action="https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu/">
         <input name="merchantId"    type="hidden"  value="${MERCHANT_ID}"   >
