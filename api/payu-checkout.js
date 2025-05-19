@@ -1,10 +1,16 @@
 const crypto = require('crypto');
 
-// CORS helper
+function generateReferenceCode() {
+  // Genera un código único combinando timestamp y números aleatorios
+  const timestamp = Date.now();
+  const random = Math.floor(Math.random() * 10000);
+  return `REF_${timestamp}_${random}`;
+}
+
 function allowCors(handler) {
   return async (req, res) => {
     res.setHeader('Access-Control-Allow-Credentials', true);
-    res.setHeader('Access-Control-Allow-Origin', '*'); // ajusta según tu dominio si es necesario
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
     res.setHeader(
       'Access-Control-Allow-Headers',
@@ -28,11 +34,15 @@ const handler = async (req, res) => {
 
   try {
     const {
-      referenceCode,
-      description,
-      amount,
-      buyerEmail
+      nombre,
+      email,
+      monto,
+      comentario
     } = req.body;
+
+    const referenceCode = generateReferenceCode();
+    const description = comentario || `Pago de ${nombre}`;
+    const amount = parseFloat(monto).toFixed(2);
 
     const MERCHANT_ID = process.env.PAYU_MERCHANT_ID;
     const ACCOUNT_ID = process.env.PAYU_ACCOUNT_ID;
@@ -55,9 +65,10 @@ const handler = async (req, res) => {
         <input name="currency"      type="hidden"  value="COP" >
         <input name="signature"     type="hidden"  value="${signature}"  >
         <input name="test"          type="hidden"  value="${TEST_MODE ? 1 : 0}" >
-        <input name="buyerEmail"    type="hidden"  value="${buyerEmail}" >
+        <input name="buyerEmail"    type="hidden"  value="${email}" >
         <input name="responseUrl"    type="hidden"  value="${BASE_URL}/response" >
         <input name="confirmationUrl"    type="hidden"  value="${BASE_URL}/api/payu-confirmation" >
+        <input name="buyerFullName" type="hidden"  value="${nombre}" >
       </form>
       <script>
         document.getElementById("payuForm").submit();
