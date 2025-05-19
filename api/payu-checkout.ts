@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import crypto from 'crypto';
+const crypto = require('crypto');
 
 // Tipos para TypeScript
 interface PayURequestBody {
