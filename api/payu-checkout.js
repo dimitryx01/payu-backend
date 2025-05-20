@@ -48,7 +48,7 @@ const handler = async (req, res) => {
     const ACCOUNT_ID = process.env.PAYU_ACCOUNT_ID;
     const API_KEY = process.env.PAYU_API_KEY;
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-    const TEST_MODE = process.env.PAYU_TEST_MODE === 'false';
+    const TEST_MODE = process.env.PAYU_TEST_MODE === 'true';
 
     const signatureString = `${API_KEY}~${MERCHANT_ID}~${referenceCode}~${amount}~COP`;
     const signature = crypto.createHash('md5').update(signatureString).digest('hex');
