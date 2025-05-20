@@ -10,7 +10,7 @@ function generateReferenceCode() {
 function allowCors(handler) {
   return async (req, res) => {
     res.setHeader('Access-Control-Allow-Credentials', true);
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Origin', 'https://jolmandeveloper.com');
     res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
     res.setHeader(
       'Access-Control-Allow-Headers',
@@ -48,14 +48,14 @@ const handler = async (req, res) => {
     const ACCOUNT_ID = process.env.PAYU_ACCOUNT_ID;
     const API_KEY = process.env.PAYU_API_KEY;
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-    const TEST_MODE = process.env.PAYU_TEST_MODE === 'true';
+    const TEST_MODE = process.env.PAYU_TEST_MODE === 'false';
 
     const signatureString = `${API_KEY}~${MERCHANT_ID}~${referenceCode}~${amount}~COP`;
     const signature = crypto.createHash('md5').update(signatureString).digest('hex');
     console.log('Firma esperada (cadena):', signatureString);
     console.log('Firma esperada (MD5):', signature );
     const form = `
-     <form id="payuForm" method="post" action="https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu/">
+     <form id="payuForm" method="post" action="https://checkout.payulatam.com/ppp-web-gateway-payu/">
         <input name="merchantId"    type="hidden"  value="${MERCHANT_ID}"   >
         <input name="accountId"     type="hidden"  value="${ACCOUNT_ID}" >
         <input name="description"   type="hidden"  value="${description}"  >

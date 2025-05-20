@@ -97,9 +97,6 @@ const handler = async (req, res) => {
     const signatureString = `${API_KEY}~${merchant_id}~${reference_sale}~${txValueFormatted}~${currency}~${state_pol}`;
     const expectedSignature = crypto.createHash('md5').update(signatureString).digest('hex');
 
-    console.log('Firma esperada (cadena):', signatureString);
-    console.log('Firma esperada (MD5):', expectedSignature);
-    console.log('Firma recibida:', sign);
 
     if (sign !== expectedSignature) {
       console.error('Firma inválida de PayU');
