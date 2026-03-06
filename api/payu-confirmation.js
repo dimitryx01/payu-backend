@@ -55,7 +55,7 @@ function getField(data, key) {
 }
 
 const handler = async (req, res) => {
-  console.log('PayU Confirmation Endpoint called!');
+  //console.log('PayU Confirmation Endpoint called!');
 
   if (req.method !== 'POST') {
     res.status(405).json({ message: 'Method Not Allowed' });
@@ -71,7 +71,8 @@ const handler = async (req, res) => {
       });
     });
 
-    console.log('Parsed PayU Body:', data);
+    //console.log('Parsed PayU Body:', data);
+    console.log(`Procesando notificación de PayU para referencia: ${reference_sale}`);
 
     // Obtener campos con limpieza de arrays
     const reference_sale = getField(data, 'reference_sale');
